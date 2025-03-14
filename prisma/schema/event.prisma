@@ -1,0 +1,18 @@
+model Event {
+    id           Int      @id @default(autoincrement())
+    title        String
+    description  String
+    image_url    String
+    category     String[]
+    ticket_price Int
+    date         String
+    location     String
+    start_time   DateTime
+    end_time     DateTime
+    website_url  String
+    userId       String
+    user         User     @relation(fields: [userId], references: [id])
+    ticketsSold  Int      @default(0)
+    totalTickets Int
+    orders       Order[]
+}

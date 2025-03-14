@@ -1,0 +1,10 @@
+model Payment {
+    id            Int      @id @default(autoincrement()) // ✅ Unique Payment ID
+    order         Order    @relation(fields: [orderId], references: [id])
+    orderId       Int      @unique
+    transactionId String // ✅ Payment provider's transaction ID
+    status        String // ✅ "pending", "success", "failed"
+    method        String // ✅ "credit_card", "paypal", etc.
+    amount        Int // ✅ Total paid amount
+    createdAt     DateTime @default(now()) // ✅ Timestamp of payment
+}
