@@ -15,8 +15,8 @@ import {
 } from "@/shared/ui/dialog";
 import { Input } from "@/shared/ui/input";
 import { Label } from "@/shared/ui/label";
-import { BuyTicketButton } from "./buyTicketButton";
-import { IEvent } from "../modal";
+import { BuyTicketButton } from "../../../entities/ticket/ui/buyTicketButton";
+import { IEvent } from "@/entities/event/modal";
 import { buyTicketAction } from "@/features/tickets/actions/buyTicketAction";
 import { useAuth } from "@clerk/nextjs";
 import { redirect } from "next/navigation";
@@ -119,15 +119,9 @@ export function BuyTicketDialog({ event }: { event: IEvent }) {
 
             <DialogFooter>
               <DialogClose asChild>
-                <Button className="text-lg" variant={"outline"}>
-                  Cancel
-                </Button>
+                <Button variant={"outline"}>Cancel</Button>
               </DialogClose>
-              <Button
-                type="submit"
-                className=" py-2 text-lg"
-                disabled={isSubmitting}
-              >
+              <Button type="submit" className=" py-2 " disabled={isSubmitting}>
                 {isSubmitting ? "Processing..." : "Buy Ticket"}
               </Button>
             </DialogFooter>

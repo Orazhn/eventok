@@ -24,7 +24,7 @@ import { Rubik } from "next/font/google";
 import { getUser } from "@/features/user/getUser";
 import Link from "next/link";
 import { Badge } from "@/shared/ui/badge";
-import BuyTicketNavigate from "./buyTicketNavigate";
+import BuyTicketNavigate from "@/entities/ticket/ui/buyTicketNavigate";
 import EventOptionsMenu from "./eventOptionsMenu";
 
 const rubik = Rubik({ subsets: ["latin"], weight: ["400", "800"] });

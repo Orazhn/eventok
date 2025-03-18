@@ -1,7 +1,7 @@
 "use client";
 import { Button } from "@/shared/ui/button";
 import { TicketIcon } from "lucide-react";
-import { IEvent } from "../modal";
+import { IEvent } from "@/entities/event/modal";
 import { DialogTrigger } from "@/shared/ui/dialog";
 
 export function BuyTicketButton({ event }: { event: IEvent }) {

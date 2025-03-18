@@ -3,6 +3,8 @@ import { ClerkProvider } from "@clerk/nextjs";
 import "./globals.css";
 import { neobrutalism } from "@clerk/themes";
 import NextTopLoader from "nextjs-toploader";
+import ReactQueryProvider from "./providers/reactQueryProvider";
+import PersistQueryClient from "@/app/providers/PersistQueryClient";
 
 export const metadata: Metadata = {
   title: "Event Management",
@@ -21,7 +23,10 @@ export default function RootLayout({
       <html lang="en">
         <body>
           <NextTopLoader showSpinner={false} color="#7043D8" />
-          {children}
+          <ReactQueryProvider>
+            <PersistQueryClient />
+            {children}
+          </ReactQueryProvider>
         </body>
       </html>
     </ClerkProvider>

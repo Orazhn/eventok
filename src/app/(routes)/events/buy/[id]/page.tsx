@@ -9,7 +9,7 @@ import Link from "next/link";
 import { Badge } from "@/shared/ui/badge";
 import { Banknote } from "lucide-react";
 import { getUserId } from "@/shared/lib/getUserId";
-import { BuyTicketDialog } from "@/entities/event/ui/buyTicketDialog";
+import { BuyTicketDialog } from "@/features/tickets/buy-ticket-dialog/buyTicketDialog";
 
 const EventDetailPage = async ({ params }: { params: { id: string } }) => {
   const userId = await getUserId();

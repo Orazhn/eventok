@@ -1,9 +1,8 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/shared/ui/tabs";
-import { Button } from "@/shared/ui/button";
 import NavigateCreateEvent from "@/entities/event/ui/navigate-create-event";
 import { getUserId } from "@/shared/lib/getUserId";
 import EventsList from "@/features/events/events-list/ui";
-import TicketsList from "@/features/tickets/tickets-list/ui";
+import TicketsTab from "@/entities/ticket/ui/ticketsTab";
 
 export default async function Dashboard({
   searchParams,
@@ -34,13 +33,7 @@ export default async function Dashboard({
           <EventsList userType="creator" userId={userId} />
         </TabsContent>
 
-        <TabsContent value="tickets" className="space-y-4">
-          <div className="flex justify-between items-center">
-            <h2 className="text-xl font-semibold">Tickets</h2>
-            <Button variant="outline">Filter</Button>
-          </div>
-          <TicketsList />
-        </TabsContent>
+        <TicketsTab />
       </Tabs>
     </div>
   );

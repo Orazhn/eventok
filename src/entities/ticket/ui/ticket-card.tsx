@@ -63,7 +63,7 @@ export default function TicketCard({ ticket }: { ticket: ITicket }) {
                   <span className="text-sm">Time</span>
                 </div>
                 <p className="font-medium text-sm md:text-base">
-                  {formatTime(ticket.event.start_time)}
+                  {formatTime(new Date(ticket.event.start_time))}
                 </p>
               </div>
               <div className="space-y-1">
