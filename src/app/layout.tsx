@@ -2,6 +2,7 @@ import { type Metadata } from "next";
 import { ClerkProvider } from "@clerk/nextjs";
 import "./globals.css";
 import { neobrutalism } from "@clerk/themes";
+import NextTopLoader from "nextjs-toploader";
 
 export const metadata: Metadata = {
   title: "Event Management",
@@ -18,7 +19,10 @@ export default function RootLayout({
       }}
     >
       <html lang="en">
-        <body>{children}</body>
+        <body>
+          <NextTopLoader showSpinner={false} color="#7043D8" />
+          {children}
+        </body>
       </html>
     </ClerkProvider>
   );

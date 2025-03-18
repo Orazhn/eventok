@@ -1,11 +1,12 @@
-model Order {
+model Ticket {
     id        Int      @id @default(autoincrement())
     user      User     @relation(fields: [userId], references: [id])
     userId    String
     event     Event    @relation(fields: [eventId], references: [id])
     eventId   Int
-    quantity  Int
-    total     Int
+    payed     Int
+    code      String   @unique
+    fullName  String
     createdAt DateTime @default(now())
     payment   Payment?
 }

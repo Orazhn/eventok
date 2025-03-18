@@ -2,19 +2,11 @@
 const nextConfig = {
   experimental: {
     serverActions: {
-      bodySizeLimit: "5mb",
+      bodySizeLimit: "10mb",
     },
   },
   images: {
-    domains: [
-      "img.clerk.com",
-      "source.unsplash.com",
-      "unsplash.com",
-      "images.unsplash.com",
-      "ox9boek9u7.ufs.sh",
-      "utfs.io",
-      "adfbhphpzpvrphafeqfh.supabase.co",
-    ],
+    domains: ["img.clerk.com", "adfbhphpzpvrphafeqfh.supabase.co"],
   },
 };
 

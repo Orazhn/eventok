@@ -1,7 +1,6 @@
-import { userType } from "@/entities/event/eventTypes";
 import { prisma } from "@/shared/lib/prisma";
 
-export async function getEventById(id: number, userType?: userType) {
+export async function getEventById(id: number) {
   const event = await prisma.event.findUnique({
     where: { id },
     include: {

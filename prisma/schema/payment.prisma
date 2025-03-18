@@ -1,6 +1,6 @@
 model Payment {
     id            Int      @id @default(autoincrement()) // ✅ Unique Payment ID
-    order         Order    @relation(fields: [orderId], references: [id])
+    order         Ticket   @relation(fields: [orderId], references: [id])
     orderId       Int      @unique
     transactionId String // ✅ Payment provider's transaction ID
     status        String // ✅ "pending", "success", "failed"

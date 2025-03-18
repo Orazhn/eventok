@@ -6,7 +6,7 @@ import Link from "next/link";
 const NavigateCreateEvent = () => {
   return (
     <Link href={"/dashboard/create"}>
-      <Button variant={"secondary"}>
+      <Button>
         <Plus className=" h-4 w-4" /> Create Event
       </Button>
     </Link>

@@ -1,16 +1,16 @@
 "use client";
 
-import { useForm } from "react-hook-form";
+import { useForm, FormProvider } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@/shared/ui/button";
 import { Textarea } from "@/shared/ui/textarea";
 import { CardContent } from "@/shared/ui/card";
-import { useRouter } from "next/navigation";
+import { redirect } from "next/navigation";
 import {
   Pencil,
   Tag,
   Info,
-  Calendar,
+  Calendar as CalendarIcon,
   Clock,
   DollarSign,
   TicketIcon,
@@ -27,9 +27,12 @@ import toast from "react-hot-toast";
 import React from "react";
 import { Label } from "@/shared/ui/label";
 import MultipleSelector, { Option } from "@/shared/ui/multi-select";
-import { FormField } from "@/shared/ui/form";
-import { FormProvider } from "react-hook-form";
-import { createEvent } from "../actions/createEvent";
+import { FormField, FormControl, FormItem, FormLabel } from "@/shared/ui/form";
+import { createEventAction } from "../actions/createEventAction";
+import { cn } from "@/shared/lib/utils";
+import { Popover, PopoverContent, PopoverTrigger } from "@/shared/ui/popover";
+import { format } from "date-fns";
+import { Calendar } from "@/shared/ui/calendar";
 
 const CreateEventForm = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -45,13 +48,6 @@ const CreateEventForm = () => {
       placeholder: "Your Event title",
     },
     {
-      id: "category",
-      Icon: Tag,
-      label: "Category",
-      type: "text",
-      placeholder: "IT, Business...",
-    },
-    {
       id: "description",
       Icon: Info,
       label: "Description",
@@ -59,7 +55,6 @@ const CreateEventForm = () => {
       placeholder: "Your event description",
       InputVariant: Textarea,
     },
-    { id: "date", label: "Date", Icon: Calendar, type: "date" },
     {
       id: "startTime",
       label: "Start Time",
@@ -110,81 +105,43 @@ const CreateEventForm = () => {
       ) : null,
     },
   ];
-  const router = useRouter();
+
+  const handleReset = () => {
+    form.reset();
+    form.reset({ category: [] });
+  };
 
   const onSubmit = async (data: EventFormValues) => {
     setIsLoading(true);
 
-    const image =
-      data.image instanceof FileList && data.image.length > 0
-        ? data.image[0]
-        : null;
+    try {
+      const image =
+        data.image instanceof FileList && data.image.length > 0
+          ? data.image[0]
+          : null;
 
-    const result = await createEvent(data, image);
-
-    if (result.success) {
-      toast.success("Event created successfully!");
-    } else {
-      toast.error(result.error || "Could not create event.");
+      await toast.promise(createEventAction(data, image), {
+        loading: "Creating...",
+        success: <b>Event created successfully! </b>,
+        error: <b>Could not create event</b>,
+      });
+      redirect("/dashboard");
+    } finally {
+      setIsLoading(false);
     }
-    router.push("/dashboard");
-
-    setIsLoading(false);
   };
 
   return (
     <CardContent>
       <FormProvider {...form}>
-        <form
-          onSubmit={form.handleSubmit((data) =>
-            toast.promise(onSubmit(data), {
-              loading: "Saving...",
-              success: <b>Event created successfully!</b>,
-              error: <b>Could not create the event.</b>,
-            })
-          )}
-          className="space-y-8"
-        >
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {inputFieds.map((input) => {
-              if (input.id == "category")
-                return (
-                  <div className="space-y-2 " key={input.id}>
-                    <Label
-                      htmlFor={input.id}
-                      className="flex items-center gap-2"
-                    >
-                      <Tag className={"size-4"} />
-                      {input.label}
-                    </Label>
-                    <FormField
-                      control={form.control}
-                      name={input.id}
-                      render={({ field }) => (
-                        <MultipleSelector
-                          {...form.register(input.id)}
-                          {...field}
-                          defaultOptions={OPTIONS}
-                          placeholder="Select catogory for event..."
-                          emptyIndicator={
-                            <p className="text-center text-lg leading-10 text-gray-600 dark:text-gray-400">
-                              no results found.
-                            </p>
-                          }
-                        />
-                      )}
-                    />
-                    {form.formState.errors.category?.message && (
-                      <p className="text-red-500">
-                        {String(form.formState.errors.category?.message)}
-                      </p>
-                    )}
-                  </div>
-                );
               return (
                 <EventInput
                   key={input.id}
                   id={input.id}
+                  disabled={isLoading}
                   label={input.label}
                   Icon={input.Icon}
                   type={input.type}
@@ -196,14 +153,93 @@ const CreateEventForm = () => {
                 />
               );
             })}
+            <div className="space-y-2 ">
+              <Label
+                htmlFor={"category"}
+                id={"category"}
+                className="flex items-center gap-2"
+              >
+                <Tag className={"size-4"} />
+                Category
+              </Label>
+              <FormField
+                control={form.control}
+                name={"category"}
+                render={({ field }) => (
+                  <MultipleSelector
+                    disabled={isLoading}
+                    {...form.register("category")}
+                    {...field}
+                    defaultOptions={OPTIONS}
+                    placeholder="Select category for event..."
+                    emptyIndicator={
+                      <p className="text-center text-lg leading-10 text-purple-700 dark:text-purple-800">
+                        no categories found.
+                      </p>
+                    }
+                  />
+                )}
+              />
+              {form.formState.errors.category?.message && (
+                <p className="text-red-500">Category is required</p>
+              )}
+            </div>
+            <FormField
+              control={form.control}
+              name="date"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="flex items-center gap-2">
+                    <CalendarIcon className={"size-4"} />
+                    Date
+                  </FormLabel>
+                  <Popover>
+                    <PopoverTrigger asChild id="date">
+                      <FormControl>
+                        <Button
+                          variant={"outline"}
+                          className={cn(
+                            "w-full pl-3 text-left font-normal",
+                            !field.value && "text-muted-foreground"
+                          )}
+                        >
+                          {field.value ? (
+                            format(field.value, "PPP")
+                          ) : (
+                            <span>Pick event date</span>
+                          )}
+                          <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                        </Button>
+                      </FormControl>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-auto p-0" align="start">
+                      <Calendar
+                        mode="single"
+                        id="date"
+                        selected={field.value}
+                        onSelect={field.onChange}
+                        disabled={(date) => date < new Date()}
+                        initialFocus
+                      />
+                    </PopoverContent>
+                  </Popover>
+                  {form.formState.errors.date?.message && (
+                    <p className="text-red-500">Select Event Date </p>
+                  )}
+                </FormItem>
+              )}
+            />
 
             <div className="md:col-span-2 flex justify-end gap-4">
-              <Button type="reset" variant="outline">
+              <Button
+                onClick={handleReset}
+                variant="outline"
+                disabled={isLoading}
+              >
                 Reset
               </Button>
               <Button
                 type="submit"
-                variant={"secondary"}
                 effect={"expandIcon"}
                 icon={PartyPopper}
                 iconPlacement="right"

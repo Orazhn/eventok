@@ -1,11 +1,10 @@
 import { userType } from "@/entities/event/eventTypes";
-import { prisma } from "../../shared/lib/prisma";
+import { prisma } from "@/shared/lib/prisma";
 
 export async function getEvents(
   take?: number,
   userId?: string | null,
-  userType?: userType,
-  searchQuery?: string
+  userType?: userType
 ) {
   try {
     const events = await prisma.event.findMany({
@@ -15,14 +14,6 @@ export async function getEvents(
           ? { NOT: { userId } }
           : userId && userType === "creator"
           ? { userId }
-          : {}),
-        ...(searchQuery
-          ? {
-              title: {
-                contains: searchQuery,
-                mode: "insensitive",
-              },
-            }
           : {}),
       },
       orderBy: { date: "desc" },

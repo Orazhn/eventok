@@ -5,7 +5,7 @@ model Event {
     image_url    String
     category     String[]
     ticket_price Int
-    date         String
+    date         DateTime
     location     String
     start_time   DateTime
     end_time     DateTime
@@ -14,5 +14,5 @@ model Event {
     user         User     @relation(fields: [userId], references: [id])
     ticketsSold  Int      @default(0)
     totalTickets Int
-    orders       Order[]
+    tickets      Ticket[]
 }

@@ -3,7 +3,7 @@
 import { createClient } from "@supabase/supabase-js";
 import { prisma } from "@/shared/lib/prisma";
 import { randomUUID } from "crypto";
-import { getUserId } from "@/shared/lib/auth";
+import { getUserId } from "@/shared/lib/getUserId";
 import { EventFormValues } from "@/entities/event/eventTypes";
 
 const supabase = createClient(
@@ -11,28 +11,25 @@ const supabase = createClient(
   process.env.SUPABASE_SERVICE_ROLE_KEY!
 );
 
-export const createEvent = async (
+export const createEventAction = async (
   data: EventFormValues,
   image?: File | null
 ) => {
+  let fileName = "";
   try {
-    const startDateTime = new Date(`${data.date}T${data.startTime}:00`);
-    const endDateTime = new Date(`${data.date}T${data.endTime}:00`);
+    const startDateTime = new Date(data.date);
+    startDateTime.setHours(Number(data.startTime.split(":")[0]));
+    startDateTime.setMinutes(Number(data.startTime.split(":")[1]));
 
-    if (startDateTime >= endDateTime) {
-      return {
-        success: false,
-        error: "Start time must be earlier than end time",
-      };
-    }
-
-    const formattedStartTime = startDateTime.toISOString();
-    const formattedEndTime = endDateTime.toISOString();
+    const endDateTime = new Date(data.date);
+    endDateTime.setHours(Number(data.endTime.split(":")[0]));
+    endDateTime.setMinutes(Number(data.endTime.split(":")[1]));
 
     let imageUrl = "";
+
     if (image) {
       const fileExt = image.name.split(".").pop();
-      const fileName = `${randomUUID()}.${fileExt}`;
+      fileName = `${randomUUID()}.${fileExt}`;
       const { error } = await supabase.storage
         .from("events")
         .upload(`events/${fileName}`, image, {
@@ -44,15 +41,15 @@ export const createEvent = async (
     }
 
     const userId = await getUserId();
-    const newEvent = await prisma.event.create({
+    await prisma.event.create({
       data: {
         title: data.title,
         description: data.description,
         category: data.category.map((item) => item.value),
         date: data.date,
         location: data.location,
-        start_time: formattedStartTime,
-        end_time: formattedEndTime,
+        start_time: startDateTime.toISOString(),
+        end_time: endDateTime.toISOString(),
         ticket_price: data.ticketPrice,
         totalTickets: data.totalTickets,
         website_url: data.websiteUrl,
@@ -60,10 +57,13 @@ export const createEvent = async (
         userId: userId as string,
       },
     });
-
-    return { success: true, event: newEvent };
   } catch (error) {
     console.error("Error creating event:", error);
-    return { success: false, error: error.message };
+
+    if (image) {
+      await supabase.storage.from("events").remove([`events/${fileName}`]);
+    }
+
+    throw new Error("Failed to create event. Please try again.");
   }
 };

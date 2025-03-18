@@ -1,6 +1,10 @@
-import { Card, CardDescription, CardHeader, CardTitle } from "@/shared/ui/card";
-import { Button } from "@/shared/ui/button";
-import Link from "next/link";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/shared/ui/card";
 import CreateEventForm from "@/features/events/create-Event-Form/ui";
 
 export default function EventForm() {
@@ -13,9 +17,6 @@ export default function EventForm() {
             Fill in the details to create a new event
           </p>
         </div>
-        <Link href="/dashboard">
-          <Button variant="link">Cancel</Button>
-        </Link>
       </div>
       <Card>
         <CardHeader>
@@ -24,7 +25,9 @@ export default function EventForm() {
             Provide the basic information about your event
           </CardDescription>
         </CardHeader>
-        <CreateEventForm />
+        <CardContent>
+          <CreateEventForm />
+        </CardContent>
       </Card>
     </div>
   );

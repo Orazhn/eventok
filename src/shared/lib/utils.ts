@@ -1,16 +1,13 @@
 import { clsx, type ClassValue } from "clsx";
+import { formatDate } from "date-fns";
 import { twMerge } from "tailwind-merge";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-export const formatDate = (date: Date): string => {
-  return new Intl.DateTimeFormat("en-US", {
-    month: "short",
-    day: "2-digit",
-    year: "numeric",
-  }).format(date);
+export const formatEventDate = (date: Date): string => {
+  return formatDate(date, "dd-MM-yyyy");
 };
 
 export const formatTime = (date: Date): string => {

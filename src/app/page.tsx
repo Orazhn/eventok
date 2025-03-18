@@ -6,7 +6,7 @@ import Header from "@/widgets/Header";
 import { Rubik } from "next/font/google";
 import { FlipWords } from "@/shared/ui/flip-words";
 import { PageCount } from "@/shared/ui/counterAnimation";
-import { getUserId } from "@/shared/lib/auth";
+import { getUserId } from "@/shared/lib/getUserId";
 
 const rubik = Rubik({ subsets: ["latin"], weight: ["400", "800"] });
 
@@ -21,19 +21,20 @@ export default async function Home() {
           <div className="grid md:grid-cols-2 gap-8 items-center">
             <div className="space-y-6">
               <h1 className="text-5xl md:text-5xl lg:text-6xl font-bold leading-tight text-gray-900">
-                <FlipWords words={words} /> <br /> Your Events, Our Platform!
+                <FlipWords words={words} className="text-primary" /> <br /> Your
+                Events, Our Platform!
               </h1>
               <p className="text-lg md:text-xl text-gray-700 max-w-lg">
                 Book and learn helpful tips from{" "}
                 <PageCount
                   end={1168}
                   duration={4}
-                  className="text-secondary text-lg"
+                  className="text-primary text-lg"
                 />
                 <br /> mentors in world-class companies with our global
                 community.
               </p>
-              <Button variant={"hero"} size={"lg"} asChild>
+              <Button size={"lg"} asChild>
                 <Link href="/events">Explore Now </Link>
               </Button>
             </div>

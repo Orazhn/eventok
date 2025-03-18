@@ -21,7 +21,7 @@ const Header = () => {
       </Link>
       <SignedOut>
         <SignInButton>
-          <Button variant="secondary">Sign In</Button>
+          <Button>Sign In</Button>
         </SignInButton>
       </SignedOut>
       <SignedIn>
