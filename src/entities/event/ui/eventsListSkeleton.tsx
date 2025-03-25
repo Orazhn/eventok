@@ -3,10 +3,10 @@ import { Card, CardContent, CardHeader } from "@/shared/ui/card";
 import { Skeleton } from "@/shared/ui/skeleton";
 import { cn } from "@/shared/lib/utils";
 
-const EventsListSkeleton = () => {
+const EventsListSkeleton = ({ cards = 8 }: { cards?: number }) => {
   return (
     <div className="flex flex-wrap gap-4 justify-center md:justify-start">
-      {Array(3)
+      {Array(cards)
         .fill(0)
         .map((_, index) => (
           <Card

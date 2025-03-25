@@ -1,13 +1,14 @@
 "use client";
 
 import { TabsContent } from "@/shared/ui/tabs";
-import { Button } from "@/shared/ui/button";
-import dynamic from "next/dynamic";
 import { Suspense } from "react";
+import dynamic from "next/dynamic";
 
-const TicketsList = dynamic(
-  () => import("@/features/tickets/tickets-list/ui"),
-  { ssr: false }
+const InfiniteTicketsList = dynamic(
+  () => import("@/features/tickets/ui/infiniteTickets"),
+  {
+    ssr: false,
+  }
 );
 
 export default function TicketsTab() {
@@ -15,11 +16,12 @@ export default function TicketsTab() {
     <TabsContent value="tickets" className="space-y-4">
       <div className="flex justify-between items-center">
         <h2 className="text-xl font-semibold">Tickets</h2>
-        <Button variant="outline">Filter</Button>
       </div>
+
       <Suspense fallback={<p>Loading tickets...</p>}>
-        <TicketsList />
+        <InfiniteTicketsList />
       </Suspense>
     </TabsContent>
   );
 }
+//Added Suspense and dynamic to avoid hydration errors

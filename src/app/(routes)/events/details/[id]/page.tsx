@@ -1,22 +1,48 @@
 import Image from "next/image";
-import { Card, CardContent } from "@/shared/ui/card";
-import { CalendarIcon, MapPinIcon, UsersIcon, TicketIcon } from "lucide-react";
+import { Card, CardContent, CardTitle, CardHeader } from "@/shared/ui/card";
+import {
+  CalendarIcon,
+  MapPinIcon,
+  UsersIcon,
+  TicketIcon,
+  LinkIcon,
+} from "lucide-react";
 import React from "react";
 import { redirect } from "next/navigation";
 import { formatEventDate, formatTime } from "@/shared/lib/utils";
-import { getEventById } from "@/features/events/getFunctions/getEventById";
 import Link from "next/link";
 import { Badge } from "@/shared/ui/badge";
 import { Banknote } from "lucide-react";
 import { getUserId } from "@/shared/lib/getUserId";
-import { BuyTicketDialog } from "@/features/tickets/buy-ticket-dialog/buyTicketDialog";
+import { BuyTicketDialog } from "@/features/tickets/ui/buyTicketDialog";
+import {
+  Table,
+  TableBody,
+  TableHead,
+  TableHeader,
+  TableRow,
+  TableCell,
+} from "@/shared/ui/table";
+import { prisma } from "@/shared/lib/prisma";
 
-const EventDetailPage = async ({ params }: { params: { id: string } }) => {
+const EventDetailPage = async ({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) => {
   const userId = await getUserId();
-  const event = await getEventById(+params.id);
+  const { id } = await params;
+
+  const event = await prisma.event.findUnique({
+    where: { id: +id },
+    include: {
+      tickets: true,
+      user: true,
+    },
+  });
 
   if (!event) {
-    redirect("/events/buy/not-found");
+    redirect("/events/details/not-found");
   }
 
   return (
@@ -79,6 +105,16 @@ const EventDetailPage = async ({ params }: { params: { id: string } }) => {
               <UsersIcon className="w-6 h-6 text-blue-600" />
               <span>{event.ticketsSold} Attendees</span>
             </div>
+            <div className="flex items-center gap-2">
+              <LinkIcon className="w-6 h-6 text-blue-600" />
+              <Link
+                href={event.website_url}
+                target="_blank"
+                className="text-blue-600 hover:underline truncate"
+              >
+                {event.website_url}
+              </Link>
+            </div>
             <div className="flex items-center space-x-3 text-gray-800 ">
               <Banknote className="w-6 h-6 text-blue-600" />
               <span
@@ -93,9 +129,43 @@ const EventDetailPage = async ({ params }: { params: { id: string } }) => {
           {userId !== event.userId && <BuyTicketDialog event={event} />}
         </CardContent>
       </Card>
+      {userId === event.userId && (
+        <Card className="w-full mx-auto shadow-lg">
+          <CardHeader>
+            <CardTitle className="text-xl">Attendees</CardTitle>
+          </CardHeader>
+          <CardContent>
+            {event.tickets.length > 0 ? (
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Name</TableHead>
+                    <TableHead>Ticket Code</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {event.tickets.map((ticket) => (
+                    <TableRow key={ticket.id}>
+                      <TableCell className="font-medium">
+                        {ticket.fullName}
+                      </TableCell>
+                      <TableCell className="text-sm text-gray-500">
+                        {ticket.code}
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            ) : (
+              <p className="text-gray-500">No attendees yet.</p>
+            )}
+          </CardContent>
+        </Card>
+      )}
     </div>
   );
 };
 
 export default EventDetailPage;
-export const revalidate = 120;
+
+export const revalidate = 60;

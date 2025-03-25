@@ -80,6 +80,50 @@
   --radius: var(--radius);
 }
 
+.sx__is-today {
+  background-color: var(--primary) !important;
+}
+
+.sx__date-input--active #sfnigihok2:focus {
+  border-color: var(--sx-color-primary) !important;
+  outline: none;
+}
+
+.sx__date-input--active .sx__date-input {
+  border-color: var(--primary) !important;
+  outline: none;
+}
+
+.sx__date-input-chevron-wrapper:focus {
+  border: none !important;
+}
+.sx__view-selection-item:hover {
+  background-color: var(--ring) !important;
+  color: #fff;
+  opacity: 0.5;
+}
+.sx__view-selection-item:focus {
+  background-color: var(--ring) !important;
+  color: #fff;
+  opacity: 0.5;
+}
+
+.sx__view-selection-item.is-selected {
+  background-color: var(--primary) !important;
+  color: #fff;
+}
+.sx__view-selection-item.is-selected:hover {
+  background-color: var(--primary) !important;
+  color: #fff;
+}
+
+.sx-react-calendar-wrapper {
+  width: 100%;
+  max-width: 100vw;
+  height: 700px;
+  max-height: 90vh;
+}
+
 #nprogress .peg {
-  box-shadow: 0 0 10px #000000, 0 0 5px #000000; /* Black shadow */
+  box-shadow: 0 0 10px #000000, 0 0 5px #000000;
 }

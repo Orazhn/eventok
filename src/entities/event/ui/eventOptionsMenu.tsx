@@ -9,14 +9,37 @@ import {
 } from "@/shared/ui/dropdown-menu";
 import { MoreHorizontal } from "lucide-react";
 import toast from "react-hot-toast";
+import { useQueryClient } from "@tanstack/react-query";
+import Link from "next/link";
 
 const EventOptionsMenu = ({ id }: { id: number }) => {
-  const handleDelete = () => {
-    toast.promise(deleteEventAction(id), {
-      loading: "deleting... 🧹",
-      error: "error deleting Event",
-      success: "event was deleted! 🗑️",
-    });
+  const queryClient = useQueryClient();
+
+  const handleDelete = async () => {
+    try {
+      await toast.promise(deleteEventAction(id), {
+        loading: "Deleting...",
+        success: "Event deleted!",
+        error: "Error deleting event",
+      });
+
+      queryClient.setQueryData(["events"], (oldData) => {
+        if (!oldData) return oldData;
+        return {
+          ...oldData,
+          pages: (
+            oldData as { pages: Array<{ events: Array<{ id: number }> }> }
+          ).pages.map((page) => ({
+            ...page,
+            events: page.events.filter((event) => event.id !== id),
+          })),
+        };
+      });
+
+      queryClient.invalidateQueries({ queryKey: ["events"] });
+    } catch (error) {
+      console.error("Error deleting event:", error);
+    }
   };
 
   return (
@@ -32,7 +55,9 @@ const EventOptionsMenu = ({ id }: { id: number }) => {
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end" className="border-0">
-          <DropdownMenuItem>Edit</DropdownMenuItem>
+          <Link href={`/dashboard/event/attendees/${id}`}>
+            <DropdownMenuItem>View attendees</DropdownMenuItem>
+          </Link>
           <DropdownMenuItem variant="destructive" onClick={handleDelete}>
             Delete
           </DropdownMenuItem>

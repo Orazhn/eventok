@@ -10,7 +10,7 @@ export default function PersistQueryClient() {
   useEffect(() => {
     if (typeof window !== "undefined") {
       const localStoragePersister = createSyncStoragePersister({
-        storage: window.localStorage,
+        storage: window.sessionStorage,
       });
 
       persistQueryClient({

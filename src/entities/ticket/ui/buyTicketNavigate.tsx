@@ -5,7 +5,7 @@ import { TicketsIcon } from "lucide-react";
 
 const BuyTicketNavigate = ({ id }: { id: number }) => {
   return (
-    <Link href={`/events/buy/${id}`}>
+    <Link href={`/events/details/${id}`}>
       <Button
         variant="buy"
         effect={"expandIcon"}

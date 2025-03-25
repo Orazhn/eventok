@@ -12,11 +12,17 @@ const Header = () => {
   return (
     <header className="flex gap-4 items-center px-6 shadow-2xl py-3 rounded-2xl w-screen justify-between bg-gray-200">
       <Link href={"/"}>
-        <div className="flex gap-2 items-center bg-gray-300 p-1 px-2 rounded-md">
-          <h1 className={cn(rubik.className, "font-semibold text-purple-700")}>
-            Eventify
+        <div className="flex gap-2 items-center bg-gray-200 p-1 px-2 rounded-md">
+          <Image
+            src={"/logo.png"}
+            width={35}
+            height={35}
+            alt="logo"
+            className="rounded-md"
+          />
+          <h1 className={cn(rubik.className, "font-semibold text-primary")}>
+            Eventok
           </h1>
-          <Image src={"/ticket.png"} width={35} height={35} alt="ticket" />
         </div>
       </Link>
       <SignedOut>

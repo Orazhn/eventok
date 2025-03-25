@@ -23,23 +23,29 @@ import { redirect } from "next/navigation";
 import toast from "react-hot-toast";
 import { cn, formatEventDate } from "@/shared/lib/utils";
 import { MapPin, Banknote, Calendar } from "lucide-react";
+import { useQueryClient } from "@tanstack/react-query";
+import CheckOut from "@/shared/ui/checkOut";
 
 const TicketSchema = z.object({
   name: z.string().min(2, "Name is required"),
-  surname: z.string().min(3, "Surname must be at least 3 characters"),
+  surname: z.string().optional(),
 });
 type TicketFormValues = z.infer<typeof TicketSchema>;
 
 export function BuyTicketDialog({ event }: { event: IEvent }) {
   const { userId } = useAuth();
+  const queryClient = useQueryClient();
 
   const {
+    watch,
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
   } = useForm<TicketFormValues>({
     resolver: zodResolver(TicketSchema),
   });
+  const name = watch("name");
+  const surname = watch("surname");
 
   const onSubmit = async (data: TicketFormValues) => {
     await toast.promise(
@@ -55,6 +61,7 @@ export function BuyTicketDialog({ event }: { event: IEvent }) {
         error: "Could not buy a ticket.",
       }
     );
+    await queryClient.invalidateQueries({ queryKey: ["tickets"] });
     redirect("/dashboard?tab=tickets");
   };
 
@@ -116,14 +123,26 @@ export function BuyTicketDialog({ event }: { event: IEvent }) {
                 <p className="text-red-500 text-sm">{errors.surname.message}</p>
               )}
             </div>
-
             <DialogFooter>
               <DialogClose asChild>
                 <Button variant={"outline"}>Cancel</Button>
               </DialogClose>
-              <Button type="submit" className=" py-2 " disabled={isSubmitting}>
-                {isSubmitting ? "Processing..." : "Buy Ticket"}
-              </Button>
+              {event.ticket_price ? (
+                <CheckOut
+                  event={event}
+                  userId={userId as string}
+                  name={name}
+                  surname={surname}
+                />
+              ) : (
+                <Button
+                  type="submit"
+                  className=" py-2 "
+                  disabled={isSubmitting}
+                >
+                  {isSubmitting ? "Processing..." : "Get Ticket"}
+                </Button>
+              )}
             </DialogFooter>
           </form>
         </div>

@@ -28,6 +28,7 @@ import BuyTicketNavigate from "@/entities/ticket/ui/buyTicketNavigate";
 import EventOptionsMenu from "./eventOptionsMenu";
 
 const rubik = Rubik({ subsets: ["latin"], weight: ["400", "800"] });
+
 export default async function EventCard({
   event,
   userType,
@@ -72,10 +73,18 @@ export default async function EventCard({
       </div>
 
       <CardHeader className="p-4 pt-0 border-b-gray-300 border-b">
-        <Link href={`events/buy/${id}`} className="cursor-pointer">
+        <Link
+          href={`events/details/${id}`}
+          className="cursor-pointer flex justify-between items-center"
+        >
           <CardTitle className="text-lg font-semibold truncate">
             {title}
           </CardTitle>
+          {isEventFinished && (
+            <Badge variant="secondary">
+              <Clock /> finished
+            </Badge>
+          )}
         </Link>
         <CardDescription className="flex justify-between items-center text-sm text-muted-foreground">
           <div className="flex items-center gap-2">
@@ -90,11 +99,8 @@ export default async function EventCard({
       </CardHeader>
       <CardContent className="p-4 pt-0 space-y-2 text-sm flex flex-col h-full">
         <div className="flex-grow space-y-2">
-          {isEventFinished && (
-            <p className="text-gray-500">note: Event is finished</p>
-          )}
           <div className="flex gap-1">
-            {category.map((item) => (
+            {category.slice(0, 2).map((item) => (
               <Badge key={item}>{item}</Badge>
             ))}
           </div>
@@ -123,7 +129,7 @@ export default async function EventCard({
             </a>
           </div>
         </div>
-        <div className="flex justify-between items-center pt-2">
+        <div className="flex justify-between items-end pt-2">
           <Price price={ticket_price} />
           {userType == "customer" && <BuyTicketNavigate id={id} />}
         </div>

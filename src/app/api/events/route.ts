@@ -11,36 +11,29 @@ export async function GET(req: Request) {
 
     const { searchParams } = new URL(req.url);
     const page = parseInt(searchParams.get("page") || "1", 10);
-    const limit = parseInt(searchParams.get("limit") || "2", 10);
+    const limit = parseInt(searchParams.get("limit") || "4", 10);
     const skip = (page - 1) * limit;
+    const userType = searchParams.get("userType") || "customer";
 
-    const tickets = await prisma.ticket.findMany({
-      where: { userId },
+    const where = userType === "creator" ? { userId } : { NOT: { userId } };
+
+    const events = await prisma.event.findMany({
+      where,
       skip,
       take: limit,
-      include: {
-        event: {
-          select: {
-            start_time: true,
-            location: true,
-            ticketsSold: true,
-            date: true,
-          },
-        },
-      },
-      orderBy: { createdAt: "desc" },
+      orderBy: { date: "desc" },
     });
 
-    const totalCount = await prisma.ticket.count({ where: { userId } });
+    const totalCount = await prisma.event.count({ where });
 
     return NextResponse.json({
-      tickets,
+      events,
       hasMore: skip + limit < totalCount,
     });
   } catch (error) {
-    console.error("Failed to fetch tickets:", error);
+    console.error("Failed to fetch events:", error);
     return NextResponse.json(
-      { error: "Failed to fetch tickets" },
+      { error: "Failed to fetch events" },
       { status: 500 }
     );
   }

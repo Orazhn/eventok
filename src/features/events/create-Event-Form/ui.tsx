@@ -5,7 +5,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@/shared/ui/button";
 import { Textarea } from "@/shared/ui/textarea";
 import { CardContent } from "@/shared/ui/card";
-import { redirect } from "next/navigation";
 import {
   Pencil,
   Tag,
@@ -26,16 +25,21 @@ import { useState } from "react";
 import toast from "react-hot-toast";
 import React from "react";
 import { Label } from "@/shared/ui/label";
-import MultipleSelector, { Option } from "@/shared/ui/multi-select";
+import MultipleSelector from "@/shared/ui/multi-select";
 import { FormField, FormControl, FormItem, FormLabel } from "@/shared/ui/form";
 import { createEventAction } from "../actions/createEventAction";
 import { cn } from "@/shared/lib/utils";
 import { Popover, PopoverContent, PopoverTrigger } from "@/shared/ui/popover";
 import { format } from "date-fns";
 import { Calendar } from "@/shared/ui/calendar";
+import { useQueryClient } from "@tanstack/react-query";
+import { OPTIONS } from "@/entities/event/eventCategories";
+import { useRouter } from "next/navigation";
 
 const CreateEventForm = () => {
   const [isLoading, setIsLoading] = useState(false);
+  const router = useRouter();
+  const queryClient = useQueryClient();
   const form = useForm({
     resolver: zodResolver(eventSchema),
   });
@@ -125,7 +129,9 @@ const CreateEventForm = () => {
         success: <b>Event created successfully! </b>,
         error: <b>Could not create event</b>,
       });
-      redirect("/dashboard");
+      await queryClient.invalidateQueries({ queryKey: ["events"] });
+      router.push("/dashboard?tab=events");
+      router.refresh();
     } finally {
       setIsLoading(false);
     }
@@ -256,16 +262,3 @@ const CreateEventForm = () => {
 };
 
 export default CreateEventForm;
-
-const OPTIONS: Option[] = [
-  { label: "Technology", value: "Technology" },
-  { label: "Business", value: "Business" },
-  { label: "Health & Wellness", value: "Health & Wellness" },
-  { label: "Education", value: "Education" },
-  { label: "Entertainment", value: "Entertainment" },
-  { label: "Sports", value: "Sports" },
-  { label: "Art & Culture", value: "Art & Culture" },
-  { label: "Science", value: "Science" },
-  { label: "Finance", value: "Finance" },
-  { label: "Networking", value: "Networking" },
-];

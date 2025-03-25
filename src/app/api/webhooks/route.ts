@@ -12,7 +12,6 @@ export async function POST(req: Request) {
     );
   }
 
-  // Create new Svix instance with secret
   const wh = new Webhook(SIGNING_SECRET);
 
   // Get headers
