@@ -10,16 +10,24 @@ import { prisma } from "@/shared/lib/prisma";
 import EventCard from "@/entities/event/ui/event-card";
 import EmptyEvents from "@/entities/event/ui/emptyEvents";
 import { auth } from "@clerk/nextjs/server";
+import { IEvent } from "@/entities/event/modal";
 
 const rubik = Rubik({ subsets: ["latin"], weight: ["400", "800"] });
 
 export default async function Home() {
   const { userId } = await auth();
-  const events = await prisma.event.findMany({
-    where: { NOT: { userId: userId as string } },
-    orderBy: { date: "desc" },
-    take: 8,
-  });
+  let events: IEvent[] = [];
+
+  try {
+    events = await prisma.event.findMany({
+      where: userId ? { NOT: { userId } } : undefined,
+      orderBy: { date: "desc" },
+      take: 8,
+    });
+  } catch (e) {
+    console.error("Error fetching events:", e);
+  }
+
   const words = ["Host :", "Connect :", "Celebrate :", "Share :"];
   return (
     <div className="min-h-screen">
