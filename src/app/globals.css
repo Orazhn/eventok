@@ -93,6 +93,9 @@
   border-color: var(--primary) !important;
   outline: none;
 }
+.sx__week-grid__date--is-today .sx__week-grid__date-number {
+  background-color: var(--primary) !important;
+}
 
 .sx__date-input-chevron-wrapper:focus {
   border: none !important;
