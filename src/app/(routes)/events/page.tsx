@@ -10,7 +10,7 @@ export default async function EventsPage({
 }) {
   const paginationParams = await searchParams;
   return (
-    <div className="py-8 px-4 md:px-8">
+    <div className="py-8 px-4 md:px-8 min-h-screen">
       <div className="flex items-center justify-between mb-8 gap-4">
         <div>
           <h1 className="text-3xl font-bold tracking-tight">Events</h1>

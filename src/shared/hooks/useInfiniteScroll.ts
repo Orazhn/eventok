@@ -26,7 +26,6 @@ export function useInfiniteScroll<T>({
     const observerInstance = new IntersectionObserver(handleObserver);
     observerInstance.observe(lastItemRef.current);
 
-    // If the last item is already in view, fetch the next page
     if (lastItemRef.current.getBoundingClientRect().top < window.innerHeight) {
       query.fetchNextPage();
     }

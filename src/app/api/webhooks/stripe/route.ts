@@ -18,7 +18,6 @@ export async function POST(request: Request) {
 
   const eventType = event.type;
 
-  // CREATE
   if (eventType === "checkout.session.completed") {
     const { amount_total, metadata } = event.data.object;
 

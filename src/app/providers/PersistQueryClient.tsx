@@ -20,5 +20,5 @@ export default function PersistQueryClient() {
     }
   }, [queryClient]);
 
-  return null; // This component only runs an effect
+  return null;
 }

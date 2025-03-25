@@ -33,7 +33,7 @@ const PaginationEvents = async ({ searchParams }: PaginationEventsProps) => {
   const [events, eventsCount] = await Promise.all([
     prisma.event.findMany({
       where: {
-        NOT: { userId: userId as string },
+        NOT: userId ? { userId: userId } : undefined,
         ...(filters.timeline === "past"
           ? { date: { lt: new Date() } }
           : filters.timeline === "upcoming"
@@ -53,7 +53,7 @@ const PaginationEvents = async ({ searchParams }: PaginationEventsProps) => {
 
     prisma.event.count({
       where: {
-        NOT: { userId: userId as string },
+        NOT: userId ? { userId: userId } : undefined,
         ...(filters.timeline === "past"
           ? { date: { lt: new Date() } }
           : filters.timeline === "upcoming"

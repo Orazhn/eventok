@@ -10,7 +10,7 @@ const Footer = () => {
             Bringing people together through unforgettable experiences.
           </p>
         </div>
-        {/* Navigation Links */}
+
         <div>
           <h3 className="text-lg font-semibold">Quick Links</h3>
           <ul className="mt-3 space-y-2 text-gray-400">
@@ -31,26 +31,8 @@ const Footer = () => {
             </li>
           </ul>
         </div>
-        <div>
-          <h3 className="text-lg font-semibold">Follow Us</h3>
-          <div className="mt-3 flex space-x-4">
-            <a href="#" className="text-gray-400 hover:text-white">
-              <i className="fab fa-facebook text-xl"></i>
-            </a>
-            <a href="#" className="text-gray-400 hover:text-white">
-              <i className="fab fa-twitter text-xl"></i>
-            </a>
-            <a href="#" className="text-gray-400 hover:text-white">
-              <i className="fab fa-instagram text-xl"></i>
-            </a>
-            <a href="#" className="text-gray-400 hover:text-white">
-              <i className="fab fa-linkedin text-xl"></i>
-            </a>
-          </div>
-        </div>
       </div>
 
-      {/* Copyright Section */}
       <div className="mt-8 border-t border-gray-700 text-center text-gray-400 pt-6">
         <p>&copy; {new Date().getFullYear()} Eventok. All rights reserved.</p>
       </div>

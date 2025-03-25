@@ -68,7 +68,9 @@ export default async function Home() {
         </section>
         <div className="p-8 flex flex-col gap-4">
           <h1 className="text-2xl text-center mb-8 font-semibold">
-            Our Upcoming Events 🎉
+            {events.length
+              ? "Our Upcoming Events 🎉"
+              : "We have no events yet, be the first partner 🤝"}
           </h1>
           {events.length ? (
             <div className="flex flex-wrap gap-4 justify-center md:justify-start">
@@ -79,9 +81,11 @@ export default async function Home() {
           ) : (
             <EmptyEvents userType="customer" />
           )}
-          <Button size={"lg"} className="text-md" variant={"link"} asChild>
-            <Link href="/events">See more </Link>
-          </Button>
+          {events.length > 8 && (
+            <Button size={"lg"} className="text-md" variant={"link"} asChild>
+              <Link href="/events">See more </Link>
+            </Button>
+          )}
         </div>
       </main>
       <Footer />
