@@ -8,5 +8,4 @@ model Ticket {
     code      String   @unique
     fullName  String
     createdAt DateTime @default(now())
-    payment   Payment?
 }
