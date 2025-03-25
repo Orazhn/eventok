@@ -33,7 +33,7 @@ Eventok is a modern event management web app built with Next.js, designed to sim
 
 1. Clone the repository:
    ```sh
-   git clone https://github.com/your-username/eventok.git
+   git clone https://github.com/Orazhn/eventok.git
    cd eventok
    ```
 2. Install dependencies:
