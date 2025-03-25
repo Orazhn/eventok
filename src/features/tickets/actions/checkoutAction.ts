@@ -6,7 +6,6 @@ export const checkoutAction = async (order: {
   eventId: number;
   userId: string;
   fullName: string;
-  date: Date;
   price: number;
   title: string;
 }) => {

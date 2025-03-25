@@ -1,6 +1,6 @@
 import React from "react";
 import { prisma } from "@/shared/lib/prisma";
-import { getUserId } from "@/shared/lib/getUserId";
+import { auth } from "@clerk/nextjs/server";
 import {
   Pagination,
   PaginationContent,
@@ -21,7 +21,7 @@ const PaginationEvents = async ({ searchParams }: PaginationEventsProps) => {
 
   const pageSize = 8;
   const pageNum = Number(page) || 1;
-  const userId = await getUserId();
+  const { userId } = await auth();
 
   const filters = {
     timeline: timeline || "undefined",

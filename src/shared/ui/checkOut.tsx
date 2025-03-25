@@ -19,14 +19,13 @@ const CheckOut = ({
   surname?: string;
 }) => {
   const queryClient = useQueryClient();
-  const { date, id, ticket_price, title } = event;
+  const { id, ticket_price, title } = event;
 
   const handleCheckOut = async () => {
     await checkoutAction({
       eventId: id,
       userId,
       fullName: `${name} ${surname}`,
-      date,
       price: ticket_price,
       title,
     });

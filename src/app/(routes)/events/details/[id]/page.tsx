@@ -13,7 +13,7 @@ import { formatEventDate, formatTime } from "@/shared/lib/utils";
 import Link from "next/link";
 import { Badge } from "@/shared/ui/badge";
 import { Banknote } from "lucide-react";
-import { getUserId } from "@/shared/lib/getUserId";
+import { auth } from "@clerk/nextjs/server";
 import { BuyTicketDialog } from "@/features/tickets/ui/buyTicketDialog";
 import {
   Table,
@@ -30,7 +30,7 @@ const EventDetailPage = async ({
 }: {
   params: Promise<{ id: string }>;
 }) => {
-  const userId = await getUserId();
+  const { userId } = await auth();
   const { id } = await params;
 
   const event = await prisma.event.findUnique({

@@ -5,16 +5,16 @@ import Header from "@/widgets/Header";
 import { Rubik } from "next/font/google";
 import { FlipWords } from "@/shared/ui/flip-words";
 import { PageCount } from "@/shared/ui/counterAnimation";
-import { getUserId } from "@/shared/lib/getUserId";
 import Footer from "@/widgets/Footer";
 import { prisma } from "@/shared/lib/prisma";
 import EventCard from "@/entities/event/ui/event-card";
 import EmptyEvents from "@/entities/event/ui/emptyEvents";
+import { auth } from "@clerk/nextjs/server";
 
 const rubik = Rubik({ subsets: ["latin"], weight: ["400", "800"] });
 
 export default async function Home() {
-  const userId = await getUserId();
+  const { userId } = await auth();
   const events = await prisma.event.findMany({
     where: { NOT: { userId: userId as string } },
     orderBy: { date: "desc" },

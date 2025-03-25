@@ -3,8 +3,8 @@
 import { createClient } from "@supabase/supabase-js";
 import { prisma } from "@/shared/lib/prisma";
 import { randomUUID } from "crypto";
-import { getUserId } from "@/shared/lib/getUserId";
 import { EventFormValues } from "@/entities/event/eventTypes";
+import { auth } from "@clerk/nextjs/server";
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -40,7 +40,7 @@ export const createEventAction = async (
       imageUrl = `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/events/events/${fileName}`;
     }
 
-    const userId = await getUserId();
+    const { userId } = await auth();
     await prisma.event.create({
       data: {
         title: data.title,
