@@ -1,97 +1,36 @@
-# Eventok
+This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
-Eventok is a modern event management web app built with Next.js, designed to simplify event organization, ticketing, and scheduling.
+## Getting Started
 
-## 🚀 Tech Stack
+First, run the development server:
 
-- **Next.js** – Powerful React framework for server-side rendering and static generation
-- **Clerk** – Authentication & user management
-- **React Hook Form + Zod** – Form validation and handling
-- **shadcn/ui** – Beautiful and customizable UI components
-- **Stripe** – Secure payment processing
-- **Supabase + Supabase Storage** – Database and file storage
-- **Prisma** – Type-safe database ORM
-- **Schedule-X** – Advanced scheduling component
-- **React Query** – Data fetching with infinite loading & caching
-- **Axios** – API requests
-- **Framer Motion** – Stunning animations
-- **qrcode.react** – QR code generation for event tickets
+```bash
+npm run dev
+# or
+yarn dev
+# or
+pnpm dev
+# or
+bun dev
+```
 
-## 🎯 Features
+Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-- 🔐 **Secure Authentication** with Clerk
-- 📆 **Event Scheduling** powered by Schedule-X
-- 🎟️ **Ticketing System** with QR code generation
-- 💳 **Stripe Integration** for seamless payments
-- 📊 **Real-time Data Handling** with React Query & Supabase
-- 📸 **Media Upload** using Supabase Storage
-- 🚀 **Optimized Performance** with Next.js & Prisma
-- 🎨 **Beautiful UI** with shadcn/ui & Framer Motion animations
+You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 
-## 🏗️ Installation & Setup
+This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
-1. Clone the repository:
-   ```sh
-   git clone https://github.com/your-username/eventok.git
-   cd eventok
-   ```
-2. Install dependencies:
-   ```sh
-   npm install
-   # or
-   yarn install
-   ```
-3. Set up environment variables in `.env.local`:
+## Learn More
 
-   ```sh
-   # Authentication
-   NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=your_clerk_publishable_key
-   CLERK_SECRET_KEY=your_clerk_secret_key
-   NEXT_PUBLIC_CLERK_SIGN_IN_URL=/sign-in
-   NEXT_PUBLIC_CLERK_SIGN_UP_URL=/sign-up
+To learn more about Next.js, take a look at the following resources:
 
-   # Database Connection
-   DATABASE_URL=your_database_url
-   DIRECT_URL=your_direct_database_url
+- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
+- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
 
-   # Database Storage
-   SUPABASE_SERVICE_ROLE_KEY=your_supabase_service_role_key
-   NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
+You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
 
-   # Webhooks
-   DOMAIN_URL=your_webapp_url # Update when deploying
-   SIGNING_SECRET=your_signing_secret
+## Deploy on Vercel
 
-   # Payment System
-   NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=your_stripe_publishable_key
-   STRIPE_SECRET_KEY=your_stripe_secret_key
-   STRIPE_WEBHOOK_SECRET=your_stripe_webhook_secret
-   NEXT_PUBLIC_SERVER_URL=your_server_url # Update when deploying
+The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
-   # Caching
-   UPSTASH_REDIS_REST_URL=your_upstash_redis_url
-   UPSTASH_REDIS_REST_TOKEN=your_upstash_redis_token
-   ```
-
-4. Run the development server:
-   ```sh
-   npm run dev
-   ```
-
-## 📸 Screenshots
-
-![Dashboard](https://via.placeholder.com/800x400?text=Dashboard+Preview)
-![Event Creation](https://via.placeholder.com/800x400?text=Create+Event+Page)
-![Ticket QR Code](https://via.placeholder.com/800x400?text=QR+Code+Ticket)
-
-## 💡 Contributing
-
-Feel free to fork this repository and submit a pull request. Any contributions are welcome!
-
-## 📜 License
-
-MIT License. See `LICENSE` for more details.
-
----
-
-Made with ❤️ using Next.js
+Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
