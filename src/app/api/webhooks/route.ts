@@ -43,6 +43,28 @@ export async function POST(req: Request) {
     });
   }
 
+  if (evt.type === "user.updated") {
+    const { image_url, username, email_addresses, id } = evt.data;
+    try {
+      const updatedUser = await prisma.user.update({
+        where: { id },
+        data: {
+          profile_image_url: image_url,
+          username: username as string,
+          email: email_addresses[0].email_address,
+        },
+      });
+      return new Response(JSON.stringify(updatedUser), {
+        status: 201,
+      });
+    } catch (err) {
+      console.error("Error: Failed to update User in Database", err);
+      return new Response("Error: Failed to update User in Database", {
+        status: 400,
+      });
+    }
+  }
+
   if (evt.type === "user.created") {
     const { image_url, id, username, email_addresses } = evt.data;
     try {

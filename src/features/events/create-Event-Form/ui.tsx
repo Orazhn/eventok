@@ -131,7 +131,6 @@ const CreateEventForm = () => {
       });
       await queryClient.invalidateQueries({ queryKey: ["events"] });
       router.push("/dashboard?tab=events");
-      router.refresh();
     } finally {
       setIsLoading(false);
     }
