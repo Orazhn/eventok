@@ -1,7 +1,7 @@
 "use client";
 
 import { Command as CommandPrimitive, useCommandState } from "cmdk";
-import { X } from "lucide-react";
+
 import * as React from "react";
 import { forwardRef, useEffect } from "react";
 
@@ -13,6 +13,7 @@ import {
   CommandList,
 } from "@/shared/ui/command";
 import { cn } from "@/shared/lib/utils";
+import { X } from "lucide-react";
 
 export interface Option {
   value: string;
@@ -499,7 +500,7 @@ const MultipleSelector = React.forwardRef<
                     }}
                     onClick={() => handleUnselect(option)}
                   >
-                    <X className="h-3 w-3 text-white hover:text-gray-200" />
+                    <X className="size-3 text-white hover:text-gray-200" />
                   </button>
                 </Badge>
               );
@@ -524,11 +525,7 @@ const MultipleSelector = React.forwardRef<
                 setOpen(true);
                 inputProps?.onFocus?.(event);
               }}
-              placeholder={
-                hidePlaceholderWhenSelected && selected.length !== 0
-                  ? ""
-                  : placeholder
-              }
+              placeholder={selected.length !== 0 ? "" : placeholder}
               className={cn(
                 "flex-1 bg-transparent outline-none placeholder:text-muted-foreground",
                 {
@@ -554,7 +551,7 @@ const MultipleSelector = React.forwardRef<
                   "hidden"
               )}
             >
-              <X />
+              <X className="size-5" />
             </button>
           </div>
         </div>

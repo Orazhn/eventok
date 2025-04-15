@@ -22,6 +22,7 @@ export async function GET(req: Request) {
       skip,
       take: limit,
       orderBy: { date: "desc" },
+      include: { user: { select: { username: true } } },
     });
 
     const totalCount = await prisma.event.count({ where });

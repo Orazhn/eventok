@@ -55,7 +55,7 @@ const EventOptionsMenu = ({ id }: { id: number }) => {
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end" className="border-0">
-          <Link href={`/dashboard/event/attendees/${id}`}>
+          <Link href={`events/details/${id}`}>
             <DropdownMenuItem>View attendees</DropdownMenuItem>
           </Link>
           <DropdownMenuItem variant="destructive" onClick={handleDelete}>

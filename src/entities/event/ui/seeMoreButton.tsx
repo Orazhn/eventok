@@ -3,7 +3,7 @@ import Link from "next/link";
 import { Button } from "@/shared/ui/button";
 import { TicketsIcon } from "lucide-react";
 
-const BuyTicketNavigate = ({ id }: { id: number }) => {
+const SeeMoreButton = ({ id }: { id: number }) => {
   return (
     <Link href={`/events/details/${id}`}>
       <Button
@@ -13,10 +13,10 @@ const BuyTicketNavigate = ({ id }: { id: number }) => {
         iconPlacement="right"
         className="px-4 py-2 text-sm font-medium"
       >
-        Buy Ticket
+        See more
       </Button>
     </Link>
   );
 };
 
-export default BuyTicketNavigate;
+export default SeeMoreButton;

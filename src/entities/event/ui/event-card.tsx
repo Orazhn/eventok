@@ -24,8 +24,8 @@ import { Rubik } from "next/font/google";
 import { getUser } from "@/features/user/getUser";
 import Link from "next/link";
 import { Badge } from "@/shared/ui/badge";
-import BuyTicketNavigate from "@/entities/ticket/ui/buyTicketNavigate";
 import EventOptionsMenu from "./eventOptionsMenu";
+import SeeMoreButton from "@/entities/event/ui/seeMoreButton";
 
 const rubik = Rubik({ subsets: ["latin"], weight: ["400", "800"] });
 
@@ -131,7 +131,7 @@ export default async function EventCard({
         </div>
         <div className="flex justify-between items-end pt-2">
           <Price price={ticket_price} />
-          {userType == "customer" && <BuyTicketNavigate id={id} />}
+          {userType == "customer" && <SeeMoreButton id={id} />}
         </div>
       </CardContent>
     </Card>

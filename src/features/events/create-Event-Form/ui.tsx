@@ -7,9 +7,7 @@ import { Textarea } from "@/shared/ui/textarea";
 import { CardContent } from "@/shared/ui/card";
 import {
   Pencil,
-  Tag,
   Info,
-  Calendar as CalendarIcon,
   Clock,
   DollarSign,
   TicketIcon,
@@ -21,28 +19,32 @@ import {
 import EventInput from "@/entities/event/ui/event-input";
 import { InputFieldType } from "@/entities/event/eventTypes";
 import { eventSchema, EventFormValues } from "@/entities/event/eventTypes";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import React from "react";
-import { Label } from "@/shared/ui/label";
-import MultipleSelector from "@/shared/ui/multi-select";
-import { FormField, FormControl, FormItem, FormLabel } from "@/shared/ui/form";
 import { createEventAction } from "../actions/createEventAction";
-import { cn } from "@/shared/lib/utils";
-import { Popover, PopoverContent, PopoverTrigger } from "@/shared/ui/popover";
-import { format } from "date-fns";
-import { Calendar } from "@/shared/ui/calendar";
 import { useQueryClient } from "@tanstack/react-query";
-import { OPTIONS } from "@/entities/event/eventCategories";
 import { useRouter } from "next/navigation";
+import { FormDatePicker } from "@/shared/ui/formDatePicker";
+import { FormMultiSelector } from "@/shared/ui/formMultiSelector";
 
 const CreateEventForm = () => {
-  const [isLoading, setIsLoading] = useState(false);
-  const router = useRouter();
-  const queryClient = useQueryClient();
+  const storageName = "createEventStorage";
   const form = useForm({
     resolver: zodResolver(eventSchema),
   });
+
+  useEffect(() => {
+    const storedData = sessionStorage.getItem(storageName);
+    if (storedData) {
+      form.reset(JSON.parse(storedData));
+    }
+  }, [form]);
+
+  const [isLoading, setIsLoading] = useState(false);
+  const router = useRouter();
+  const queryClient = useQueryClient();
+
   const inputFieds: InputFieldType[] = [
     {
       id: "title",
@@ -113,6 +115,7 @@ const CreateEventForm = () => {
   const handleReset = () => {
     form.reset();
     form.reset({ category: [] });
+    sessionStorage.removeItem(storageName);
   };
 
   const onSubmit = async (data: EventFormValues) => {
@@ -130,113 +133,47 @@ const CreateEventForm = () => {
         error: <b>Could not create event</b>,
       });
       await queryClient.invalidateQueries({ queryKey: ["events"] });
+      localStorage.removeItem(storageName);
       router.push("/dashboard?tab=events");
     } finally {
       setIsLoading(false);
     }
   };
 
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      sessionStorage.setItem(storageName, JSON.stringify(form.watch()));
+    }, 500);
+
+    return () => clearTimeout(timeout);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [form.watch(), form]);
+
   return (
     <CardContent>
       <FormProvider {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {inputFieds.map((input) => {
-              return (
-                <EventInput
-                  key={input.id}
-                  id={input.id}
-                  disabled={isLoading}
-                  label={input.label}
-                  Icon={input.Icon}
-                  type={input.type}
-                  register={form.register}
-                  errors={form.formState.errors}
-                  InputVariant={input.InputVariant}
-                  defaultValue={input.defaultValue}
-                  placeholder={input.placeholder}
-                />
-              );
-            })}
-            <div className="space-y-2 ">
-              <Label
-                htmlFor={"category"}
-                id={"category"}
-                className="flex items-center gap-2"
-              >
-                <Tag className={"size-4"} />
-                Category
-              </Label>
-              <FormField
-                control={form.control}
-                name={"category"}
-                render={({ field }) => (
-                  <MultipleSelector
-                    disabled={isLoading}
-                    {...form.register("category")}
-                    {...field}
-                    defaultOptions={OPTIONS}
-                    placeholder="Select category for event..."
-                    emptyIndicator={
-                      <p className="text-center text-lg leading-10 text-purple-700 dark:text-purple-800">
-                        no categories found.
-                      </p>
-                    }
-                  />
-                )}
+            {inputFieds.map((input) => (
+              <EventInput
+                key={input.id}
+                id={input.id}
+                disabled={isLoading}
+                label={input.label}
+                Icon={input.Icon}
+                type={input.type}
+                register={form.register}
+                errors={form.formState.errors}
+                InputVariant={input.InputVariant}
+                defaultValue={input.defaultValue}
+                placeholder={input.placeholder}
               />
-              {form.formState.errors.category?.message && (
-                <p className="text-red-500">Category is required</p>
-              )}
-            </div>
-            <FormField
-              control={form.control}
-              name="date"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="flex items-center gap-2">
-                    <CalendarIcon className={"size-4"} />
-                    Date
-                  </FormLabel>
-                  <Popover>
-                    <PopoverTrigger asChild id="date">
-                      <FormControl>
-                        <Button
-                          variant={"outline"}
-                          className={cn(
-                            "w-full pl-3 text-left font-normal",
-                            !field.value && "text-muted-foreground"
-                          )}
-                        >
-                          {field.value ? (
-                            format(field.value, "PPP")
-                          ) : (
-                            <span>Pick event date</span>
-                          )}
-                          <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                        </Button>
-                      </FormControl>
-                    </PopoverTrigger>
-                    <PopoverContent className="w-auto p-0" align="start">
-                      <Calendar
-                        mode="single"
-                        id="date"
-                        selected={field.value}
-                        onSelect={field.onChange}
-                        disabled={(date) => date < new Date()}
-                        initialFocus
-                      />
-                    </PopoverContent>
-                  </Popover>
-                  {form.formState.errors.date?.message && (
-                    <p className="text-red-500">Select Event Date </p>
-                  )}
-                </FormItem>
-              )}
-            />
-
+            ))}
+            <FormMultiSelector form={form} />
+            <FormDatePicker form={form} />
             <div className="md:col-span-2 flex justify-end gap-4">
               <Button
+                type="reset"
                 onClick={handleReset}
                 variant="outline"
                 disabled={isLoading}

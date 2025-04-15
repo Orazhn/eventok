@@ -1,14 +1,9 @@
 import PaginationEvents from "@/features/events/ui/paginationEvents";
-import { FilterEventsDialog } from "@/features/events/ui/filterEventsDialog";
 import { Suspense } from "react";
 import EventsListSkeleton from "@/entities/event/ui/eventsListSkeleton";
+import { FilterEventsSheet } from "@/features/events/ui/filterEventsSheet";
 
-export default async function EventsPage({
-  searchParams,
-}: {
-  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
-}) {
-  const paginationParams = await searchParams;
+export default async function EventsPage() {
   return (
     <div className="py-8 px-4 md:px-8 min-h-screen">
       <div className="flex items-center justify-between mb-8 gap-4">
@@ -18,7 +13,7 @@ export default async function EventsPage({
             Explore Upcoming and Past events
           </p>
         </div>
-        <FilterEventsDialog />
+        <FilterEventsSheet />
       </div>
       <div className="mb-8 w-full">
         <Suspense
@@ -28,7 +23,7 @@ export default async function EventsPage({
             </div>
           }
         >
-          <PaginationEvents searchParams={paginationParams} />
+          <PaginationEvents />
         </Suspense>
       </div>
     </div>

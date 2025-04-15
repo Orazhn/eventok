@@ -1,27 +1,17 @@
 "use client";
-
 import { TabsContent } from "@/shared/ui/tabs";
-import { Suspense } from "react";
-import dynamic from "next/dynamic";
-
-const InfiniteTicketsList = dynamic(
-  () => import("@/features/tickets/ui/infiniteTickets"),
-  {
-    ssr: false,
-  }
-);
+import InfiniteTicketsList from "@/features/tickets/ui/infiniteTickets";
+import { useIsHydrated } from "@/shared/hooks/useIsHydrated";
 
 export default function TicketsTab() {
+  const isHydrated = useIsHydrated();
+  if (!isHydrated) return null;
   return (
     <TabsContent value="tickets" className="space-y-4">
       <div className="flex justify-between items-center">
         <h2 className="text-xl font-semibold">Tickets</h2>
       </div>
-
-      <Suspense fallback={<p>Loading tickets...</p>}>
-        <InfiniteTicketsList />
-      </Suspense>
+      <InfiniteTicketsList />
     </TabsContent>
   );
 }
-//Added Suspense and dynamic to avoid hydration errors

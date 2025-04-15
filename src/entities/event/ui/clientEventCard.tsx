@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { ComponentProps } from "react";
 import { userType } from "@/entities/event/eventTypes";
 import {
   Card,
@@ -23,45 +23,30 @@ import { cn, formatTime } from "@/shared/lib/utils";
 import { Rubik } from "next/font/google";
 import Link from "next/link";
 import Price from "@/entities/event/ui/price";
-import BuyTicketNavigate from "@/entities/ticket/ui/buyTicketNavigate";
+import BuyTicketNavigate from "@/entities/event/ui/seeMoreButton";
 import EventOptionsMenu from "@/entities/event/ui/eventOptionsMenu";
 import Image from "next/image";
-import { useUser } from "@clerk/nextjs";
+import { DBEvent } from "@/entities/event/modal";
 
 const rubik = Rubik({ subsets: ["latin"], weight: ["400", "800"] });
 
-interface Event {
-  id: number;
-  title: string;
-  image_url: string;
-  userId: string;
-  date: string;
-  start_time: string;
-  end_time: string;
-  category: string[];
-  location: string;
-  ticket_price: number;
-  ticketsSold: number;
-  totalTickets: number;
-  website_url: string;
-}
-
 interface ClientEventCardProps {
-  event: Event;
+  event: DBEvent;
   userType: userType;
 }
 
 export default function ClientEventCard({
   event,
   userType,
-}: ClientEventCardProps) {
+  className,
+}: ClientEventCardProps & Pick<ComponentProps<"div">, "className">) {
   const isEventFinished = new Date() > new Date(event.date);
-  const { user } = useUser();
   return (
     <Card
       className={cn(
         "py-0 w-full transition-shadow hover:shadow-2xl rounded-lg overflow-hidden",
-        rubik.className
+        rubik.className,
+        className
       )}
     >
       <div className="relative w-full">
@@ -97,7 +82,9 @@ export default function ClientEventCard({
 
           <div className="flex items-center gap-2 font-semibold cursor-pointer">
             <User className="h-4 w-4" />
-            <h3 className="text-sm">{user?.username}</h3>
+            <h3 className="text-sm">
+              <Link href={`users/${event.userId}`}> {event.user.username}</Link>
+            </h3>
           </div>
         </CardDescription>
       </CardHeader>

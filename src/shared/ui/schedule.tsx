@@ -12,37 +12,30 @@ import { createEventModalPlugin } from "@schedule-x/event-modal";
 import { IEvent } from "@/entities/event/modal";
 import { formatDate } from "date-fns";
 import "@schedule-x/theme-shadcn";
+import { ITicket } from "@/entities/ticket/modal";
 
 interface props {
   events: IEvent[];
-  tickets: ({
-    event: {
-      title: string;
-      start_time: Date;
-      end_time: Date;
-      ticketsSold: number;
-      totalTickets: number;
-      location: string;
-    };
-  } & {
-    id: number;
-    userId: string;
-    code: string;
-    eventId: number;
-    payed: number;
-    fullName: string;
-    createdAt: Date;
-  })[];
+  tickets: ITicket[];
 }
-
 export const Schedule = ({ events, tickets }: props) => {
+  const parseDate = (date: string | Date): Date => {
+    if (typeof date === "string") {
+      return new Date(date);
+    }
+    return date;
+  };
+
   const scheduleEvents: CalendarEventExternal[] = events.map((event) => ({
     id: event.id,
     title: event.title,
     description: `${event.ticketsSold} / ${event.totalTickets} attendees`,
     location: event.location,
-    start: event.start_time.toISOString().slice(0, 16).replace("T", " "),
-    end: event.end_time.toISOString().slice(0, 16).replace("T", " "),
+    start: parseDate(event.start_time)
+      .toISOString()
+      .slice(0, 16)
+      .replace("T", " "),
+    end: parseDate(event.end_time).toISOString().slice(0, 16).replace("T", " "),
     calendarId: "event",
   }));
 
@@ -51,8 +44,14 @@ export const Schedule = ({ events, tickets }: props) => {
     title: ticket.event.title,
     description: `${ticket.event.ticketsSold} / ${ticket.event.totalTickets} attendees`,
     location: ticket.event.location,
-    start: ticket.event.start_time.toISOString().slice(0, 16).replace("T", " "),
-    end: ticket.event.end_time.toISOString().slice(0, 16).replace("T", " "),
+    start: parseDate(ticket.event.start_time)
+      .toISOString()
+      .slice(0, 16)
+      .replace("T", " "),
+    end: parseDate(ticket.event.end_time)
+      .toISOString()
+      .slice(0, 16)
+      .replace("T", " "),
     calendarId: "ticket",
   }));
 
@@ -101,7 +100,7 @@ export const Schedule = ({ events, tickets }: props) => {
       <div className="flex gap-4 mb-4">
         <div className="flex items-center gap-2">
           <span className="w-4 h-4 rounded-full bg-[hsl(220,90%,50%)]"></span>
-          <span className="text-sm">Events you organized</span>
+          <span className="text-sm">Your Events</span>
         </div>
         <div className="flex items-center gap-2">
           <span className="w-4 h-4 rounded-full bg-[hsl(265,90%,50%)]"></span>

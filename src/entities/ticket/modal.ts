@@ -1,10 +1,6 @@
 import { Ticket } from "@prisma/client";
+import { IEvent } from "../event/modal";
 
 export type ITicket = Ticket & {
-  event: {
-    start_time: Date;
-    location: string;
-    ticketsSold: number;
-    date: Date;
-  };
+  event: IEvent;
 };

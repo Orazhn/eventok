@@ -16,7 +16,7 @@ const fetchEvents = async ({
   userType: userType;
 }) => {
   const res = await axios.get(
-    `/api/events?page=${pageParam}&limit=4&userType=${userType}`
+    `/api/infiniteEvents?page=${pageParam}&limit=4&userType=${userType}`
   );
   return res.data;
 };

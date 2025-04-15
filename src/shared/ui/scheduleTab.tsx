@@ -1,31 +1,51 @@
-import React from "react";
-import { prisma } from "@/shared/lib/prisma";
+"use client";
 import { Schedule } from "@/shared/ui/schedule";
-import { auth } from "@clerk/nextjs/server";
+import { useQuery } from "@tanstack/react-query";
+import axios from "axios";
+import { IEvent } from "@/entities/event/modal";
+import { ITicket } from "@/entities/ticket/modal";
+import LoadingSpinner from "./loadingSpinner";
+import { useIsHydrated } from "@/shared/hooks/useIsHydrated";
+import { TabsContent } from "@radix-ui/react-tabs";
 
-const ScheduleTab = async () => {
-  const { userId } = await auth();
-  const [events, tickets] = await Promise.all([
-    prisma.event.findMany({
-      where: { userId: userId as string },
-    }),
-    prisma.ticket.findMany({
-      where: { userId: userId as string },
-      include: {
-        event: {
-          select: {
-            start_time: true,
-            end_time: true,
-            title: true,
-            ticketsSold: true,
-            totalTickets: true,
-            location: true,
-          },
-        },
-      },
-    }),
-  ]);
-  return <Schedule events={events} tickets={tickets} />;
+interface Schedule {
+  events: IEvent[];
+  tickets: ITicket[];
+}
+
+const fetchSchedule = async (): Promise<Schedule> => {
+  const { data } = await axios.get<Schedule>("/api/schedule");
+  return data;
+};
+
+const ScheduleTab = () => {
+  const isHydrated = useIsHydrated();
+  const { data: schedule, isLoading } = useQuery({
+    queryKey: ["schedule"],
+    queryFn: fetchSchedule,
+  });
+
+  if (!isHydrated) return null;
+
+  if (isLoading)
+    return (
+      <div className="flex justify-center">
+        <LoadingSpinner />
+      </div>
+    );
+
+  if (!schedule)
+    return <div className="flex justify-center mt-5">No schedule found</div>;
+
+  return (
+    <TabsContent value="schedule">
+      <h1 className="text-xl font-bold mb-6">Schedule</h1>
+      <Schedule
+        events={schedule?.events ?? []}
+        tickets={schedule?.tickets ?? []}
+      />
+    </TabsContent>
+  );
 };
 
 export default ScheduleTab;

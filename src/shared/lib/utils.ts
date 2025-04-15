@@ -24,3 +24,5 @@ export function formatCurrency(amount: number): string {
     currency: "USD",
   }).format(amount);
 }
+
+export type Replace<T, K extends keyof T, V> = Omit<T, K> & Record<K, V>;

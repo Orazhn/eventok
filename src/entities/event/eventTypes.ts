@@ -1,6 +1,7 @@
 import * as z from "zod";
 import { LucideIcon } from "lucide-react";
 import { ElementType, ReactNode } from "react";
+import { ControllerRenderProps, Path } from "react-hook-form";
 
 export type userType = "customer" | "creator" | undefined;
 
@@ -58,3 +59,8 @@ export const eventSchema = z
   );
 
 export type EventFormValues = z.infer<typeof eventSchema>;
+
+export type FieldProps<
+  T extends EventFormValues,
+  K extends Path<T>
+> = ControllerRenderProps<T, K>;

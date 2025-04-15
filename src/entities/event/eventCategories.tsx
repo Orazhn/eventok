@@ -5,8 +5,8 @@ export const OPTIONS: Option[] = [
   { label: "Education", value: "Education" },
   { label: "Entertainment", value: "Entertainment" },
   { label: "Sports", value: "Sports" },
-  { label: "Art & Culture", value: "Art & Culture" },
   { label: "Science", value: "Science" },
   { label: "Finance", value: "Finance" },
   { label: "Networking", value: "Networking" },
 ];
+export type Category = (typeof OPTIONS)[number]["value"];
